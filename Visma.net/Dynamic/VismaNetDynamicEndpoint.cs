@@ -12,12 +12,19 @@ using System.Threading.Tasks;
 
 namespace ONIT.VismaNetApi.Dynamic
 {
-    public class VismaNetDynamicEndpoint : DynamicObject
+    public class Context
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
+    }
+        public class VismaNetDynamicEndpoint : DynamicObject
     {
         private readonly VismaNetAuthorization _auth;
         private readonly bool _isResourceEndpoint;
         private readonly string _endpointName;
         private readonly string _base;
+
 
         internal VismaNetDynamicEndpoint(string endpointName, VismaNetAuthorization auth, bool isResourceEndpoint = false)
         {
@@ -38,6 +45,12 @@ namespace ONIT.VismaNetApi.Dynamic
                 return await VismaNetApiHelper.Get<JObject>(argument, $"{_base}{_endpointName}", _auth);
 
             }
+        }
+        
+
+        public async Task<List<Context>> GetContexts()
+        {
+            return await VismaNetApiHelper.Get<List<Context>>(null, $"{_base}{_endpointName}", _auth);
         }
 
         public async Task<dynamic> GetAllModifiedSince(DateTime date)
